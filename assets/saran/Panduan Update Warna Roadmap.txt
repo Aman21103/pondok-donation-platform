@@ -1,0 +1,85 @@
+PANDUAN MENGUBAH WARNA NOMOR ROADMAP SESUAI TAHAP PEMBANGUNAN
+
+TUJUAN
+
+Roadmap pembangunan berada pada bagian "ROADMAP PEMBANGUNAN" di website. Nomor setiap tahap berada di dalam lingkaran. Secara default, Tahap I ditandai warna emas sebagai tahap aktif; tahap lainnya belum aktif. Ketika pembangunan resmi memasuki tahap berikutnya, ubah penanda aktif supaya lingkaran nomor tahap tersebut berubah warna.
+
+PENTING: perubahan aktif ini hanya mengubah penanda visual roadmap. Perubahan tidak otomatis membuktikan bahwa pekerjaan telah dimulai atau selesai. Perbarui hanya sesuai kondisi dan informasi program yang benar-benar sudah dikonfirmasi.
+
+BAGIAN KODE YANG MENGATUR WARNA AKTIF
+
+1. Buka src/main.jsx.
+2. Tekan Ctrl+F dan cari teks "stages.map" atau "timeline-item active".
+3. Di dalam section dengan id="tahapan", cari baris yang membentuk class pada setiap item roadmap. Saat ini logikanya kurang lebih:
+
+<div className={i===0 ? "timeline-item active" : "timeline-item"} key={a}>
+  <div className="timeline-dot">{i+1}</div>
+  ...
+</div>
+
+Maknanya: i adalah nomor urut item yang dimulai dari 0, bukan dari 1. Jadi i===0 berarti Tahap I, i===1 berarti Tahap II, i===2 berarti Tahap III, dan seterusnya. Class "active" memicu warna emas pada lingkaran nomor.
+
+4. Cari aturan warna di src/styles.css dengan Ctrl+F, cari selector:
+
+.timeline-item.active .timeline-dot
+
+Saat ini aturan tersebut memberi background emas, border emas, dan warna teks hijau gelap pada nomor tahap aktif. Tahap yang tidak memiliki class active memakai warna dasar dari .timeline-dot.
+
+CARA MEMINDAHKAN PENANDA AKTIF KE TAHAP SELANJUTNYA
+
+Untuk Tahap II, ubah syarat i===0 menjadi i===1 pada baris className di src/main.jsx:
+
+Sebelum:
+<div className={i===0 ? "timeline-item active" : "timeline-item"} key={a}>
+
+Sesudah (Tahap II aktif):
+<div className={i===1 ? "timeline-item active" : "timeline-item"} key={a}>
+
+Untuk tahap lainnya, gunakan tabel ini:
+
+- Tahap I: i===0
+- Tahap II: i===1
+- Tahap III: i===2
+- Tahap IV: i===3
+- Tahap V: i===4
+
+Contoh mengaktifkan Tahap III:
+<div className={i===2 ? "timeline-item active" : "timeline-item"} key={a}>
+
+Jangan mengubah {i+1} di dalam .timeline-dot. Bagian tersebut menampilkan angka yang terlihat (1 sampai 5); yang diubah hanya angka di syarat active.
+
+LANGKAH EDIT YANG AMAN
+
+1. Buat salinan cadangan src/main.jsx sebelum mengedit, atau pastikan perubahan tersimpan di Git.
+2. Di src/main.jsx, cari baris className yang memeriksa i===0.
+3. Ganti hanya angka 0 di kondisi tersebut sesuai urutan indeks tahap dari tabel di atas.
+4. Simpan file dan periksa bagian Roadmap di browser. Seharusnya warna emas berpindah ke nomor tahap yang dipilih.
+5. Pastikan hanya ada satu kondisi active. Jangan menambah class active secara manual ke beberapa tahap kecuali memang ingin menandai lebih dari satu tahap.
+
+MENGUBAH WARNA EMAS KE WARNA LAIN (OPSIONAL)
+
+Jika yang ingin diubah adalah warna aktifnya, bukan tahap yang aktif:
+
+1. Buka src/styles.css.
+2. Cari selector .timeline-item.active .timeline-dot.
+3. Ubah nilai background dan border-color untuk warna lingkaran, serta color untuk warna angka. Contoh di bawah memakai variabel warna hijau dan emas website:
+
+.timeline-item.active .timeline-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--green3);
+}
+
+Untuk warna lain, ganti --gold dengan kode warna, misalnya #2f8f5b. Pastikan warna angka tetap kontras dan mudah dibaca. Jika aturan CSS ditulis dalam satu baris, cukup ubah nilai pada selector tersebut; tidak perlu menghapus atau mengganti aturan timeline lainnya.
+
+PENJELASAN INDEKS i
+
+Daftar roadmap pada src/main.jsx ada di konstanta stages. Map memproses item pertama dengan indeks 0 meskipun nomor yang ditampilkan adalah 1. Karena itu, Tahap II menggunakan i===1. Jangan memakai i===2 untuk Tahap II, karena itu akan menandai Tahap III.
+
+CHECKLIST SEBELUM SELESAI
+
+- Tahap yang ditandai aktif sesuai status terbaru yang sudah dikonfirmasi.
+- Hanya angka indeks pada kondisi active yang diubah.
+- Angka tampilan {i+1} tidak diubah.
+- Warna nomor memiliki kontras yang baik dengan latar lingkaran.
+- Tampilan roadmap diperiksa pada desktop dan ponsel.

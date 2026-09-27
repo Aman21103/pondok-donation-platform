@@ -1,0 +1,277 @@
+PANDUAN MENAMBAHKAN DAN MENGUBAH FOTO DOKUMENTASI
+
+KONDISI WEBSITE SAAT INI
+
+Website saat ini belum memiliki galeri dokumentasi. File foto yang ada di assets/img adalah Logo.png dan logo.jpeg; keduanya merupakan aset logo, bukan foto dokumentasi. Jangan mengganti atau menimpa file logo untuk menambahkan foto program.
+
+REKOMENDASI FOLDER FOTO
+
+Untuk foto yang akan ditampilkan di website, gunakan folder public/dokumentasi/ agar mudah dikelola dan dipanggil dari halaman. Buat folder berdasarkan tahap, contohnya:
+
+public/
+  dokumentasi/
+    tahap-1-persiapan-kawasan/
+      kondisi-lahan-2026-09.jpg
+      akses-jalan-2026-09.jpg
+      pengukuran-lahan-2026-10.jpg
+    tahap-2-pembangunan-masjid/
+      ...
+
+Simpan foto di komputer terlebih dahulu, kecilkan ukuran file tanpa membuatnya buram, lalu salin ke folder tahap yang sesuai. Gunakan nama file sederhana dengan huruf kecil, tanpa spasi, dan deskriptif. Format JPG atau WebP umumnya cocok untuk foto. Jangan menghapus atau mengganti logo yang sudah ada.
+
+CARA MENAMPILKAN FOTO DI WEBSITE
+
+1. Buka src/main.jsx.
+2. Tambahkan satu section galeri di antara section yang sudah ada. Contoh lokasi yang rapi adalah setelah section "Memahami Program" (className="section explain") dan sebelum section "Cara Berpartisipasi". Pastikan section memakai id unik, misalnya "dokumentasi".
+3. Di dalam section, buat judul "Dokumentasi Program" lalu kelompokkan foto berdasarkan tahap, misalnya "Tahap I — Persiapan Kawasan".
+4. Untuk setiap foto, gunakan elemen gambar dengan alamat dari folder public, misalnya:
+   <img src="/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg" alt="Kondisi lahan sebelum persiapan Tahap I, September 2026" />
+   Alamat dimulai dari "/" dan tidak mencantumkan kata "public". Contoh: file di public/dokumentasi/foto.jpg dipanggil dengan src="/dokumentasi/foto.jpg".
+5. Tambahkan keterangan/caption di dekat foto yang menyebutkan kegiatan atau kondisi, tahap, dan waktu pengambilan.
+6. Untuk menambahkan foto berikutnya, salin filenya ke folder public/dokumentasi/tahap yang sesuai, kemudian tambahkan satu elemen foto baru di src/main.jsx dengan alamat, alt, dan caption yang benar.
+7. Untuk mengganti foto, salin foto pengganti ke folder tersebut dan ubah alamat src atau ganti file dengan nama yang sama. Jika memakai nama yang sama, lakukan refresh penuh pada browser agar cache lama tidak terlihat.
+8. Untuk menghapus foto dari halaman, hapus elemen gambar dan caption-nya dari src/main.jsx. File fotonya juga boleh dihapus dari folder jika sudah tidak digunakan.
+
+CATATAN PENTING: Menyalin file ke folder tidak otomatis membuat foto muncul di website. Foto perlu ditambahkan juga ke markup atau daftar data galeri di src/main.jsx. Bila galeri dibuat menggunakan daftar/array dan .map(), tambahkan atau ubah item pada daftar itu.
+
+TAMPILAN GALERI
+
+- Rekomendasi: satu section Dokumentasi Program dengan galeri yang dikelompokkan per tahap, bukan satu galeri campur tanpa keterangan.
+- Untuk versi awal, cukup tampilkan Tahap I — Persiapan Kawasan. Tambahkan tahap lain ketika kegiatan tahap tersebut benar-benar berjalan dan sudah memiliki dokumentasi aktual.
+- Gunakan kisi-kisi foto (grid) agar beberapa foto terlihat teratur. Tambahkan aturan CSS untuk ukuran thumbnail, jarak, dan tampilan di ponsel di src/styles.css. Gunakan object-fit: cover bila ingin semua thumbnail seragam; gunakan object-fit: contain bila seluruh bagian foto harus terlihat.
+- Jika galeri hendak mudah ditemukan, tambahkan tautan "Dokumentasi" menuju #dokumentasi pada daftar navigasi di src/main.jsx.
+
+BAGIAN CSS YANG PERLU DITAMBAHKAN
+
+Aturan tampilan galeri ditulis di src/styles.css. File tersebut saat ini menggunakan CSS yang sebagian besar ditulis padat dalam satu baris. Agar aturan baru mudah dibaca dan tidak mengubah tampilan komponen lain:
+
+1. Buka src/styles.css dan gulir ke bagian paling bawah.
+2. Tambahkan aturan dasar galeri setelah aturan CSS komponen yang sudah ada, tetapi sebelum blok @media(max-width:950px), @media(max-width:720px), dan @media(max-width:430px). Aturan dasar harus berada di luar blok @media supaya berlaku pada layar desktop.
+3. Tambahkan aturan responsif untuk galeri di dalam masing-masing blok @media yang sudah tersedia. Jika lebih mudah dibaca, aturan @media galeri tersendiri juga boleh diletakkan di bagian paling bawah file.
+4. Pastikan nama class pada JSX di src/main.jsx sama persis dengan selector CSS di bawah. Jika nama class di JSX berbeda, sesuaikan selector CSS.
+
+CONTOH STRUKTUR ELEMEN GALERI DAN CLASS
+
+Untuk membuat contoh CSS di bawah bekerja, gunakan class berikut pada bagian galeri:
+
+- Pembungkus foto: documentation-grid
+- Kartu foto: documentation-card
+- Keterangan foto: documentation-caption
+
+PENJELASAN CONTOH JSX (BAGIAN INI MERUJUK KE BARIS 63–71 DI DOKUMENTASI)
+
+Kode pada bagian tersebut adalah JSX, yaitu cara React menulis elemen tampilan di src/main.jsx. Bayangkan galeri sebagai sebuah rak:
+
+- <div className="documentation-grid"> adalah rak/kotak yang mengatur posisi semua kartu foto.
+- Setiap <article className="documentation-card"> adalah satu kartu pada rak tersebut. Untuk menampilkan tiga foto, buat tiga article.
+- <img ... /> menampilkan file foto. Nilai src adalah lokasi file di dalam public. Misalnya file public/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg ditulis sebagai src="/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg". Jangan menulis "public" di alamat src.
+- alt adalah teks penjelas foto untuk pembaca layar dan akan terlihat jika gambar gagal dimuat. Jelaskan isi foto, bukan hanya menulis "foto".
+- <div className="documentation-caption"> adalah bagian bawah kartu yang berisi keterangan foto.
+- <b> berisi judul pendek yang lebih menonjol; <span> berisi tahap atau tanggal yang lebih ringkas.
+- Nama class seperti documentation-grid dan documentation-card harus sama dengan nama selector CSS di src/styles.css supaya aturan tampilan dapat diterapkan.
+
+PANDUAN UTAMA: MENAMBAHKAN FOTO KE UPDATE PROGRAM TANPA MEMBUAT KOLOM/SECTION BARU
+
+Ikuti bagian ini jika yang diinginkan adalah memasukkan satu foto terbaru ke kartu "Update Program" yang sudah tersedia. Jangan membuat <section> baru, jangan membuat <div className="updates"> baru, dan jangan menyalin contoh galeri terpisah di bagian opsional paling bawah dokumen.
+
+1. SIAPKAN FILE FOTO
+
+Buat folder berikut jika belum ada, lalu taruh foto di dalamnya:
+
+public/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg
+
+Anda dapat mengganti nama file, tetapi nama dan ekstensi pada alamat src nanti harus sama persis. Dalam JSX, alamat file public/... ditulis tanpa kata "public". Contoh: file di atas dipanggil sebagai "/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg".
+
+2. TEMUKAN KARTU UPDATE PROGRAM YANG SUDAH ADA
+
+Buka src/main.jsx, gunakan pencarian (Ctrl+F), lalu cari "Belum ada pembaruan yang dipublikasikan.". Hasilnya berada dalam bagian "TRANSPARANSI", tepat setelah elemen trust-grid. Anda akan menemukan satu blok yang dimulai dengan <div className="updates"> dan bentuk aslinya kurang lebih seperti ini:
+
+<div className="updates">
+  <div>
+    <h3>Update Program</h3>
+    <p>Belum ada pembaruan yang dipublikasikan.</p>
+  </div>
+  <span>V1</span>
+</div>
+
+3. GANTI ISI KARTU YANG SAMA
+
+Ganti blok di atas dengan contoh berikut. Perhatikan bahwa hanya ada satu <div className="updates">: foto dimasukkan ke dalam <div> pertama, tepat setelah paragraf. <span>V1</span> tetap menjadi label di sisi kanan kartu.
+
+<div className="updates">
+  <div>
+    <h3>Update Program</h3>
+    <p>Dokumentasi persiapan kawasan — September 2026.</p>
+    <img
+      className="updates-photo"
+      src="/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg"
+      alt="Kondisi lahan persiapan pembangunan, September 2026"
+    />
+  </div>
+  <span>V1</span>
+</div>
+
+Jangan menghapus <div className="updates"> yang lama lalu menambah kartu baru di luar bagian tersebut. Ganti blok yang lama di tempatnya. Dengan cara ini, foto tetap menjadi isi kartu Update Program yang sama, bukan kolom baru.
+
+4. ATUR UKURAN FOTO DENGAN CSS
+
+Buka src/styles.css. Cari selector .updates, lalu tambahkan aturan khusus berikut di dekat aturan tersebut atau di bagian paling bawah file, sebelum aturan @media. Gunakan class khusus .updates-photo; jangan memakai selector umum img karena dapat mengubah logo atau gambar lain.
+
+.updates-photo {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: 240px;
+  margin-top: 14px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+width: 100% membuat foto mengikuti lebar area teks di dalam kartu, sedangkan max-width membatasi lebarnya agar tidak terlalu besar. height membuat tinggi konsisten. object-fit: cover mengisi area foto dengan rapi namun dapat memotong sedikit sisi gambar. Jika seluruh foto harus terlihat, ubah menjadi object-fit: contain; mungkin akan ada ruang kosong di sisi foto.
+
+5. PERIKSA HASILNYA
+
+- Pastikan file benar-benar berada di folder public dan nama/ekstensinya cocok dengan src.
+- Simpan src/main.jsx dan src/styles.css, lalu periksa website di browser.
+- Jika gambar tidak tampil, periksa ejaan path, kapitalisasi nama file, dan ekstensi (.jpg, .jpeg, atau .webp).
+- Jika gambar terlalu besar atau terpotong, sesuaikan max-width, height, atau object-fit pada .updates-photo.
+- Ganti caption dengan kegiatan dan tanggal yang benar-benar sesuai dengan foto. Beri label "Ilustrasi rencana" jika gambar bukan dokumentasi kondisi aktual.
+
+CATATAN TENTANG CONTOH GALERI DI BAWAH
+
+Mulai dari judul "CONTOH GALERI TERPISAH (OPSIONAL)", bagian selanjutnya adalah panduan alternatif untuk membuat section galeri baru dengan beberapa kartu foto. Bagian itu bukan langkah untuk menaruh foto di kolom Update Program. Jika hanya ingin satu foto dalam Update Program, cukup ikuti lima langkah di atas dan lewati contoh opsional tersebut.
+
+CONTOH GALERI TERPISAH (OPSIONAL)
+
+Contoh ini dapat digunakan di dalam section Dokumentasi yang sudah dibuat di src/main.jsx. Judul tahap berada di atas rak foto; kedua article berada di dalam satu documentation-grid:
+
+<section id="dokumentasi" className="section">
+  <div className="container">
+    <div className="section-heading">
+      <span className="section-kicker">DOKUMENTASI PROGRAM</span>
+      <h2>Perkembangan di lokasi</h2>
+      <p>Dokumentasi aktual persiapan kawasan pembangunan.</p>
+    </div>
+
+    <h3>Tahap I — Persiapan Kawasan</h3>
+    <div className="documentation-grid">
+      <article className="documentation-card">
+        <img
+          src="/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg"
+          alt="Kondisi lahan sebelum persiapan Tahap I, September 2026"
+        />
+        <div className="documentation-caption">
+          <b>Kondisi lahan</b>
+          <span>Persiapan kawasan · September 2026</span>
+        </div>
+      </article>
+
+      <article className="documentation-card">
+        <img
+          src="/dokumentasi/tahap-1-persiapan-kawasan/akses-jalan-2026-09.jpg"
+          alt="Akses jalan menuju lahan pembangunan, September 2026"
+        />
+        <div className="documentation-caption">
+          <b>Akses menuju lokasi</b>
+          <span>Persiapan kawasan · September 2026</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+Sebelum menyalin contoh tersebut, pastikan kedua file foto benar-benar sudah ada dengan nama dan ekstensi yang sama persis di:
+
+public/dokumentasi/tahap-1-persiapan-kawasan/kondisi-lahan-2026-09.jpg
+public/dokumentasi/tahap-1-persiapan-kawasan/akses-jalan-2026-09.jpg
+
+Jika nama foto Anda berbeda, ubah bagian akhir src supaya cocok. Contohnya, jika file bernama jalan-masuk.webp, gunakan src="/dokumentasi/tahap-1-persiapan-kawasan/jalan-masuk.webp". Perhatikan huruf besar/kecil dan ekstensi .jpg, .jpeg, atau .webp.
+
+Untuk menambah foto ketiga, salin satu article className="documentation-card" yang sudah ada, tempel sebelum </div> penutup documentation-grid, lalu ubah src, alt, judul <b>, dan keterangan <span>. Jangan menghapus tag penutup </article> atau </div>; tag-tag itu menandai akhir kartu dan rak. Pastikan <section> galeri juga memiliki id unik dan tidak ditempatkan di dalam section lain.
+
+Letakkan heading nama tahap, misalnya "Tahap I — Persiapan Kawasan", di atas grid kartu. Untuk tahap berikutnya, buat heading tahap baru dan grid baru dengan kartu yang memakai alamat folder tahap tersebut.
+
+CONTOH ATURAN CSS GALERI
+
+Tambahkan aturan berikut di src/styles.css pada lokasi yang dijelaskan di atas:
+
+.documentation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.documentation-card {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(14, 43, 30, .08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.documentation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(14, 43, 30, .13);
+}
+
+.documentation-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.documentation-caption {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px 16px;
+}
+
+.documentation-caption b {
+  color: var(--green3);
+  font-size: 14px;
+}
+
+.documentation-caption span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+Untuk layar tablet, tambahkan aturan berikut di dalam @media(max-width:950px):
+
+.documentation-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+Untuk layar ponsel, tambahkan aturan berikut di dalam @media(max-width:720px):
+
+.documentation-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+Jika ingin menampilkan dua kartu dalam satu baris pada ponsel lebar, gunakan repeat(2, minmax(0, 1fr)) dan pastikan gambar serta caption masih terbaca. Grid satu kolom biasanya lebih nyaman untuk foto dokumentasi dan keterangan yang panjang.
+
+PENJELASAN AGAR TAMPILAN RAPI
+
+- Grid tiga kolom di desktop menjaga foto tersusun konsisten; minmax(0, 1fr) mencegah kolom melebar karena konten panjang.
+- Grid dua kolom di tablet dan satu kolom di ponsel mencegah foto dan caption menjadi terlalu sempit.
+- aspect-ratio: 4 / 3 membuat tinggi semua area foto seragam. object-fit: cover mengisi area tanpa merusak proporsi, tetapi sebagian tepi foto mungkin terpotong. Jika bagian penting foto terpotong, ganti menjadi object-fit: contain dan beri background yang sesuai.
+- border-radius, border, dan box-shadow memberi pemisah halus dan tampilan kartu yang sejalan dengan gaya website.
+- Caption diletakkan pada latar putih terpisah dari gambar supaya tanggal dan keterangan mudah dibaca.
+- Gunakan gambar dengan rasio dan kualitas serupa. Hindari terlalu banyak foto dalam satu kelompok; pilih foto yang paling jelas dan mewakili kondisi.
+- Jangan menambahkan aturan umum seperti img { ... } untuk galeri ini, karena dapat ikut mengubah logo atau gambar lain. Gunakan selector khusus .documentation-card img.
+
+CATATAN PENYESUAIAN CSS
+
+Pada stylesheet yang sekarang, blok responsif berada di bagian bawah: @media(max-width:950px), @media(max-width:720px), dan @media(max-width:430px). Jika aturan galeri ditambahkan sebagai blok media baru, letakkan setelah aturan dasar galeri. Selector khusus .documentation-grid dan .documentation-card membantu mencegah benturan dengan komponen lain.
+
+KETERANGAN, AKURASI, DAN PRIVASI
+
+- Isi alt harus menjelaskan isi foto dengan singkat untuk aksesibilitas dan jika gambar gagal dimuat.
+- Cantumkan tanggal/bulan dan tahun. Gunakan label "Ilustrasi rencana" untuk gambar desain; jangan membuatnya terlihat seolah-olah dokumentasi bangunan aktual.
+- Gunakan foto asli dan jangan mengeditnya dengan cara yang menyesatkan tentang progres kegiatan.
+- Minta izin orang yang dapat dikenali sebelum memublikasikan foto. Untuk anak-anak, minta izin wali dan pertimbangkan untuk tidak menampilkan wajah.
+- Hindari menampilkan data pribadi, nomor telepon, dokumen identitas, nomor rekening, atau alamat yang sensitif.
+- Setelah perubahan, jalankan website dan periksa bahwa semua foto tampil di desktop dan ponsel. Jika gambar rusak, periksa ejaan nama file, kapitalisasi, ekstensi, serta alamat src. Periksa juga tab Console browser untuk kesalahan.
